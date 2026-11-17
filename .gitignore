@@ -1,0 +1,15 @@
+# Secretos: nunca se versionan
+.env
+.env.*
+*.pem
+*.key
+application-local.properties
+application-local.yml
+secrets/
+# Build
+node_modules/
+target/
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.log
