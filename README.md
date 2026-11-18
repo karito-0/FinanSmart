@@ -10,7 +10,7 @@ Documentación de análisis y diseño por fases:
 | Fase | Entregables | Estado |
 |---|---|---|
 | A | 1 Resumen y decisiones · 2 Enfoque sistémico · 3 Requisitos | Publicada |
-| B | 4 Lógica matemática · 5 Casos de uso · 6 Clases · 7 DER · 8 Normalización | Pendiente |
+| B | 4 Lógica matemática · 5 Casos de uso · 6 Clases · 7 DER · 8 Normalización | En revisión (PR `docs/fase-b`) |
 | C | 9 SQL · 10 Estructura/API · 11 Pantallas · 12 Génesis del proyecto | Pendiente |
 
 ## Stack
@@ -19,6 +19,7 @@ Front: HTML, CSS, JavaScript (fetch) · Back: Java 17, Spring Boot, Spring Secur
 ## Estructura
 ```
 docs/        Análisis y diseño (Markdown + Mermaid)
+docs/anexos/ Verificación de cálculos (Python)
 database/    Scripts SQL (sin datos de ejemplo)
 frontend/    Sitio web (estructura barril)
 backend/     API (paquetes com.finansmart)
