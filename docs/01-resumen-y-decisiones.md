@@ -1,6 +1,6 @@
 # 01 · Resumen ejecutivo y registro de decisiones
 
-Versión 2 · Noviembre de 2026 · Cubre: RF-A24, RF-05, RF-08, RF-12, RF-A01, RN-01, RN-03, RNF-11, RNF-15 (ver doc 03).
+Versión 3 · Noviembre de 2026 · Cubre: RF-A24, RF-05, RF-08, RF-12, RF-A01, RN-01, RN-03, RNF-11, RNF-15 (ver doc 03).
 
 ## 1. Resumen ejecutivo
 FinanSmart pasa a desarrollarse **solo como sitio web responsive** (celular < 768 px, tableta 768–1023 px, escritorio ≥ 1024 px, desde 360 px). El proyecto móvil queda en pausa y sus pantallas sirven de guía visual. El sistema tiene tres roles (USUARIO, ADMIN, SUPERADMIN), 2FA por SMS obligatorio en todo acceso, banca de solo lectura con revisión manual del usuario, y un principio rector: **la cuenta nace vacía; el usuario crea todo; el sistema calcula, resume y alerta.**
@@ -44,6 +44,11 @@ FinanSmart pasa a desarrollarse **solo como sitio web responsive** (celular < 76
 | INC-09 | «Google ya verificó teléfono/correo» | Se ignora esa verificación; SMS siempre | D-05 | RF-05 | Resuelta |
 | INC-10 | Funciones futuras visibles en diseños | Se ocultan (D-06) | Alcance MVP | Figma | Resuelta |
 | INC-11 | Cifras de marketing sin fuente | Se eliminan (§6) | Ley 1480 de 2011 | Landing | Resuelta; **pendiente validación legal** |
+| INC-12 | RF-15 (cuenta sin categorías) vs. RF-17 (categoría obligatoria) y RN-09 («Sin categoría» del sistema) | La primera categoría se crea en línea desde el formulario de movimiento; «Sin categoría» es del sistema, solo para reasignar; los catálogos semilla (rol, plan, categoría del sistema) no son datos de ejemplo | Mantiene «la cuenta nace vacía» sin bloquear el primer movimiento | Doc web RF-15/RF-17, doc 07 | Resuelta |
+| INC-13 | INC-01 ubicaba `limite_mensual` en categoría; RF-19 lo ubica en el presupuesto | El límite vive solo en `presupuesto`, por categoría y mes | Sin duplicidad y con histórico mensual | INC-01 (aclaración), doc 07 | Resuelta |
+| INC-14 | No se define si un abono a meta reduce el balance | Los abonos no son movimientos y no alteran el balance (S-07) | Evita doble conteo y mantiene el balance igual al de los movimientos | RF-23 | Resuelta con supuesto; confirmar en PA-08 |
+| INC-15 | RN-02 llama «excedido» a `G ≥ L`, que con `G = L` no es exceso | Mismo estado y color; textos distintos («Llegaste a tu límite» / «Superaste tu límite por $X») | Mensaje veraz sin cambiar la regla del cliente | RN-02, Figma | Resuelta |
+| INC-16 | La primera versión del DER tenía 4 dependencias transitivas (`canal`, `es_sistema`, estados deducibles) | Se eliminaron las columnas derivadas (doc 08 §4) | Cumplir 3FN | Doc 06 y 07 | Resuelta |
 
 ## 5. Decisiones de diseño propias (justificadas)
 **Contraseña (D-04).** Mínimo 8, máximo 64; al menos una letra y un número; sin espacios en los extremos; no igual al correo, nombre o teléfono; no estar en lista de contraseñas comunes; se permite cualquier carácter Unicode. Se almacena con hash adaptativo (bcrypt/Argon2). *Supuesto:* no se exige símbolo ni rotación periódica (prácticas actuales y compatibles con el mínimo de 8).
@@ -93,3 +98,14 @@ Salud financiera, patrimonio neto, fondo de emergencia, libertad financiera, sim
 | PA-05 | Abierto | Proveedor de SMS, costo y SLA |
 | PA-06 | Abierto | Los 18 puntos por definir del documento web (insumo no recibido) |
 | PA-07 | Abierto | Valor real del límite de Alimentación del ejemplo INC-04 |
+| S-06 | Supuesto | Los meses restantes de una meta cuentan el mes en curso (doc 04, F7) |
+| S-07 | Supuesto | Los abonos a metas no modifican el balance |
+| S-08 | Supuesto | Las sincronizaciones fallidas no consumen el cupo de 2 al día |
+| S-09 | Supuesto | SUPERADMIN hereda los permisos de ADMIN |
+| S-10 | Supuesto | Sincronizaciones programadas a las 06:00 y 18:00 (hora Colombia) |
+| S-11 | Supuesto | Un propuesto es «posible duplicado» si coincide monto y tipo con un movimiento a ≤ 1 día |
+| S-12 | Supuesto | No se crea ni promueve a SUPERADMIN desde la aplicación (alta controlada fuera de ella) |
+| S-13 | Supuesto | Vigencia e inactividad máxima de la sesión por definir con el cliente |
+| PA-08 | Abierto | Confirmar si los abonos a metas deben reflejarse en el balance |
+| PA-09 | Abierto | Horarios de sincronización y si los intentos fallidos consumen cupo |
+| PA-10 | Abierto | Retención de la auditoría y su pseudonimización al eliminar una cuenta |
