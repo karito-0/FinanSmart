@@ -1,0 +1,22 @@
+{
+  "name": "finansmart",
+  "private": true,
+  "type": "module",
+  "description": "Herramientas de documentación y pruebas de FinanSmart (sin dependencias de producción)",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "validar": "node scripts/validar-trazabilidad.mjs",
+    "escanear": "node scripts/escanear-secretos.mjs",
+    "genesis:sincronizar": "node scripts/sincronizar-genesis.mjs",
+    "genesis:servir": "node scripts/servir-genesis.mjs",
+    "probar": "node --test",
+    "verificar:calculos": "python3 docs/anexos/verificar_calculos.py"
+  },
+  "devDependencies": {
+    "dompurify": "3.1.6",
+    "jsdom": "24.1.1",
+    "marked": "12.0.2"
+  }
+}

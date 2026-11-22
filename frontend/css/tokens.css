@@ -1,0 +1,17 @@
+/* Paleta oficial del Figma «Sistema de diseño» (página 82). Cada color tiene UN solo rol (RW-06). */
+:root {
+  --azul-confianza: #15579A;   /* marca, navegación, fondos principales */
+  --azul-oscuro:    #0D3B69;   /* texto y títulos */
+  --verde-logro:    #278F4F;   /* SOLO logro, ahorro y avances */
+  --naranja-alerta: #D67600;   /* SOLO aviso del 80 % */
+  --rojo-limite:    #BE2D2D;   /* SOLO límite excedido, siempre con acción */
+  --crema-neutro:   #EEF4FA;   /* fondo de tarjetas y contenedores */
+  --blanco:         #FFFFFF;
+  --borde:          #C9D8E8;
+  --texto-suave:    #44596E;
+
+  --radio: 10px;
+  --sombra: 0 1px 3px rgba(13, 59, 105, .12);
+  --fuente: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --fuente-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}

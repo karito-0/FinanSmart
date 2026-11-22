@@ -86,7 +86,7 @@ No se desnormaliza por rendimiento. Quedan estas cuatro, con la razón y la prot
 |---|---|---|---|
 | `movimiento.usuario_id` | Cuando la categoría es del usuario, `categoria_id → usuario_id` | La categoría «Sin categoría» es del sistema y no tiene dueño, así que el dueño del movimiento no siempre se deduce de ella; además todas las consultas filtran por usuario | Servicio y prueba de integración: la categoría debe ser del mismo usuario o del sistema |
 | `notificacion.usuario_id` | Si hay `presupuesto_id`, el destinatario se deduce de la categoría del presupuesto | Las notificaciones de seguridad o del sistema no tienen presupuesto; el destinatario es un hecho propio de la notificación | Se crea siempre desde el servicio de alertas con el dueño del presupuesto |
-| `movimiento_propuesto.estado` | `APROBADO ⇔ movimiento_id no nulo` | RECHAZADO y PENDIENTE no se pueden deducir; guardar el estado completo simplifica la bandeja | `CHECK ((estado = 'APROBADO') = (movimiento_id IS NOT NULL))` |
+| `movimiento_propuesto.estado` | `movimiento_id no nulo ⇒ APROBADO` (no al revés: si se borra el movimiento, sigue APROBADO sin enlace) | RECHAZADO, PENDIENTE y «aprobado y luego borrado» no se pueden deducir de las demás columnas | Disparador `trg_propuesto_bi/bu`; prueba «Borrar el movimiento aprobado deja el propuesto APROBADO» |
 | `suscripcion.prueba_hasta` | Depende de `inicia_en + plan.dias_prueba` | Es la condición **pactada** con la persona; si el cliente cambia los días de prueba del plan, no debe cambiar a quien ya la contrató | Se calcula una sola vez al crear la suscripción |
 
 Dos columnas que parecen redundantes y **no** lo son:

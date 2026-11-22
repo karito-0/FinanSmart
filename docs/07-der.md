@@ -101,6 +101,7 @@ erDiagram
     BIGINT usuario_id FK
     VARCHAR nombre
     ENUM tipo
+    VARCHAR icono
   }
   movimiento {
     BIGINT id PK
@@ -126,6 +127,7 @@ erDiagram
     BIGINT id PK
     BIGINT usuario_id FK
     VARCHAR nombre
+    VARCHAR icono
     DECIMAL monto_objetivo
     DATE fecha_objetivo
     DATETIME creada_en
@@ -246,7 +248,7 @@ erDiagram
 | Regla | Dónde se aplica |
 |---|---|
 | Un usuario tiene **un** rol | `usuario.rol_id` obligatorio |
-| `categoria.usuario_id` nulo ⇒ categoría del sistema («Sin categoría», una de INGRESO y otra de GASTO); no existe columna `es_sistema` (3FN) | Se deduce de `usuario_id IS NULL`; el script semilla crea solo esas dos |
+| `categoria.usuario_id` nulo ⇒ categoría del sistema («Sin categoría», una de INGRESO y otra de GASTO); no existe columna `es_sistema` (3FN) | Se deduce de `usuario_id IS NULL`; índice único funcional `IFNULL(usuario_id,0), tipo, nombre` |
 | Nombre de categoría único por usuario y tipo | `UNIQUE (usuario_id, tipo, nombre)` |
 | Un presupuesto por categoría y mes | `UNIQUE (categoria_id, mes)`; `mes` es siempre el día 1 |
 | Presupuesto solo sobre categorías de GASTO de un usuario | Servicio + pruebas (la BD no cruza tablas en `CHECK`) |
@@ -257,10 +259,13 @@ erDiagram
 | Montos en pesos enteros y positivos | `CHECK (monto > 0 AND monto = TRUNCATE(monto, 0))` |
 | `1 ≤ umbral_aviso_pct < umbral_limite_pct ≤ 100` | `CHECK` en `presupuesto` |
 | `meta_ahorro_pct` entre 1 y 100 | `CHECK` en `usuario` |
-| Auditoría solo inserción | Usuario de BD de la aplicación sin `UPDATE` ni `DELETE` |
+| Auditoría solo inserción | Privilegios por tabla (`SELECT, INSERT`) + disparadores `trg_auditoria_bu/bd`; MySQL no permite revocar un privilegio de tabla concedido a nivel de base, por eso se conceden tabla por tabla |
 | Un solo teléfono y correo por cuenta | `UNIQUE` en `usuario` |
-| `APROBADO` ⇔ tiene `movimiento_id` | `CHECK ((estado = 'APROBADO') = (movimiento_id IS NOT NULL))` |
-| Solo el permiso bancario apunta a una cuenta | `CHECK ((tipo = 'PERMISO_BANCARIO') = (cuenta_bancaria_id IS NOT NULL))` |
+| Si el propuesto está enlazado a un movimiento, debe estar `APROBADO`. Lo contrario no se exige: si el usuario borra después el movimiento, el propuesto sigue `APROBADO` sin enlace para que no se reimporte | Disparador `trg_propuesto_bi/bu` (un `CHECK` no puede usarse en una columna con `ON DELETE SET NULL`) |
+| Solo el permiso bancario apunta a una cuenta | Disparador `trg_consentimiento_bi` |
+| No se elimina una categoría con movimientos (RN-09), pero al **eliminar la cuenta** todo se borra sin importar el orden | `ON DELETE CASCADE` + disparador `trg_categoria_bd` (los borrados en cascada no activan disparadores) |
+| Una categoría nueva de movimiento es del propio usuario; reasignar puede usar «Sin categoría» | `trg_movimiento_bi` / `trg_movimiento_bu` |
+| Menor de edad no se registra; fecha de nacimiento inmutable | `trg_usuario_bi` / `trg_usuario_bu` |
 | `codigo_verificacion.destino` solo en cambios de correo o teléfono | Nulo en los demás tipos (el canal se deduce del tipo, 3FN) |
 
 ## 3. Catálogos semilla (no son datos de ejemplo)
@@ -281,7 +286,7 @@ No se precargan categorías, movimientos, presupuestos, metas, lecciones ni usua
 | `intento_acceso.etapa` | CONTRASENA, GOOGLE, SMS |
 | `intento_acceso.resultado` | EXITOSO, CREDENCIALES_INVALIDAS, CODIGO_INCORRECTO, CODIGO_VENCIDO, BLOQUEADO, SMS_NO_ENVIADO |
 | `categoria.tipo` | INGRESO, GASTO |
-| `cuenta_bancaria.tipo` | AHORROS, CORRIENTE, BILLETERA |
+| `cuenta_bancaria.tipo` | AHORROS, CORRIENTE, BILLETERA, TARJETA |
 | `cuenta_bancaria.estado` | ACTIVA, ERROR (revocada = `revocado_en` no nulo; vencida = `permiso_vence_en` pasado) |
 | `sincronizacion.resultado` | EXITOSA, PARCIAL, FALLIDA |
 | `movimiento_propuesto.tipo` | INGRESO, GASTO |

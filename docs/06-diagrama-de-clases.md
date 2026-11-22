@@ -64,6 +64,7 @@ classDiagram
     +Long id
     +String nombre
     +TipoCategoria tipo
+    +String icono
     +esDelSistema() boolean
   }
   class Movimiento {
@@ -85,6 +86,7 @@ classDiagram
   class Meta {
     +Long id
     +String nombre
+    +String icono
     +BigDecimal montoObjetivo
     +LocalDate fechaObjetivo
   }
