@@ -1,0 +1,36 @@
+# Verificaciones del repositorio (RNF-13, RNF-14).
+# PARA ACTIVARLO: copiar este archivo a .github/workflows/verificar.yml. Subirlo exige un token o una cuenta con permiso «workflow».
+# NOTA: este flujo NO se ha ejecutado todavía en GitHub; revisa con atención la primera corrida.
+name: Verificar
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  verificar:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683   # v4.2.2
+      - name: Dependencias de prueba
+        run: npm ci --ignore-scripts
+      - name: Escaneo de secretos (RNF-14)
+        run: npm run escanear
+      - name: Trazabilidad (RNF-13)
+        run: npm run validar
+      - name: Pruebas del módulo Génesis
+        run: npm run probar
+      - name: Cálculos del doc 04
+        run: npm run verificar:calculos
+      - name: Base de datos
+        env:
+          MYSQL_PWD: root          # valor por defecto del servidor MySQL del runner; no es un secreto
+          MYSQL_CMD: mysql -h127.0.0.1 -uroot --default-character-set=utf8mb4
+        run: |
+          sudo systemctl start mysql.service
+          until mysqladmin -h127.0.0.1 -uroot ping --silent; do sleep 1; done
+          $MYSQL_CMD < database/01_schema.sql
+          $MYSQL_CMD < database/02_catalogos.sql
+          bash database/pruebas/ejecutar.sh
+          bash database/pruebas/permisos.sh

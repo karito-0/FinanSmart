@@ -13,3 +13,7 @@ target/
 .vscode/*
 !.vscode/extensions.json
 *.log
+
+# Génesis: contenido generado por scripts/sincronizar-genesis.mjs
+frontend/superadmin/genesis/contenido/*
+!frontend/superadmin/genesis/contenido/.gitkeep

@@ -68,11 +68,12 @@ def ok(nombre, obtenido, esperado):
     casos.append((nombre, obtenido, esperado, obtenido == esperado))
 
 # F1 / INC-04: ejemplo corregido (límite 400.000)
-ok("F1 uso 364.000/400.000", pct_mostrado(364000, 400000), 91)
-ok("F1 uso 336.000/400.000 (tras borrar 28.000)", pct_mostrado(336000 , 400000), 84)
+ok("F1 uso 196.000/200.000", pct_mostrado(196000, 200000), 98)
+ok("F1 uso 168.000/200.000 (tras borrar 28.000, Figma)", pct_mostrado(168000, 200000), 84)
+ok("F13 disponible 200.000-168.000", D(200000) - D(168000), D(32000))
+ok("F1 Ocio 118.000/100.000 (Figma)", pct_mostrado(118000, 100000), 118)
 ok("F1 uso truncado 79,99%", pct_mostrado(79999, 100000), 79)
 ok("F1 uso 0 gastado", pct_mostrado(0, 500000), 0)
-ok("F1 uso 125%", pct_mostrado(500000, 400000), 125)
 # F2 estados
 ok("F2 79,99 % -> NORMAL", estado_presupuesto(79999, 100000), "NORMAL")
 ok("F2 80,00 % -> AVISO", estado_presupuesto(80000, 100000), "AVISO")
@@ -88,6 +89,7 @@ ok("F4 tasa 3.200.000 / 2.560.000", tasa_ahorro(3200000, 2560000), 20)
 ok("F4 tasa 3.200.000 / 2.559.999 (truncada)", tasa_ahorro(3200000, 2559999), 20)
 ok("F4 tasa gasta más que ingreso", tasa_ahorro(1000000, 1250000), -25)
 ok("F4 ingreso 0 -> no calculable", tasa_ahorro(0, 500000), None)
+ok("F4 Inicio del Figma: 1.240.500/3.200.000 se muestra 38 (no 39)", tasa_ahorro(3200000, 1959500), 38)
 ok("F4 cumple meta 20 % justo", cumple_meta_ahorro(3200000, 2560000), True)
 ok("F4 no cumple con 19,99 %", cumple_meta_ahorro(3200000, 2560001), False)
 # F7 meses restantes
