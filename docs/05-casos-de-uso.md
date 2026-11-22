@@ -169,7 +169,7 @@ No existe sesión (`sesion`) hasta que el SMS es válido (RF-06). Si el proveedo
 - **Postcondición:** dato cambiado; sesiones de otros dispositivos cerradas.
 
 ### CU-08 Gestionar categorías
-- **Requisitos:** RF-15, RF-16, RN-09.
+- **Requisitos:** RF-16, RN-09 (RF-15 como precondición).
 - **Precondición:** sesión de USUARIO. La cuenta nace **sin** categorías; el formulario de movimiento permite crear la primera en línea (INC-12).
 - **Flujo principal:** 1) crea, renombra o elimina una categoría de INGRESO o GASTO; 2) si la elimina y tiene movimientos, el sistema exige reasignarlos a otra categoría del mismo tipo o a «Sin categoría» (categoría del sistema, no seleccionable para nuevos movimientos); 3) si tenía presupuestos, se eliminan.
 - **Excepciones:** nombre repetido para el mismo tipo; intento de editar la categoría del sistema.
@@ -269,13 +269,13 @@ No existe sesión (`sesion`) hasta que el SMS es válido (RF-06). Si el proveedo
 | CU | Requisitos |
 |---|---|
 | 01 | RF-01, 02, 03, 15 |
-| 02 | RF-04, A01 |
-| 03 | RF-06, 07, 08 |
+| 02 | RF-04, 05, A01 |
+| 03 | RF-06, 07, 08, A01 |
 | 04 | RF-05, 07, 09 |
 | 05 | RF-10 |
 | 06 | RF-11 |
 | 07 | RF-12, 13, 14 |
-| 08 | RF-15, 16 |
+| 08 | RF-16 |
 | 09 | RF-17, 18 |
 | 10 | RF-19 |
 | 11 | RF-20, 21, 35 |

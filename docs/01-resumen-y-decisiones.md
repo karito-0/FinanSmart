@@ -9,12 +9,12 @@ FinanSmart pasa a desarrollarse **solo como sitio web responsive** (celular < 76
 | Insumo | Estado | Consecuencia |
 |---|---|---|
 | Prompt maestro v2 (texto) | Recibido y leído | Fuente de este paquete |
-| Informe 1 «PROYECTO FINANSMART» | **No recibido en esta conversación** | Se usan solo las afirmaciones citadas en el prompt (RNF2, `generarTransacciones()`). No se supone nada más. |
-| Documento web v1.0 (20 tablas, 18 puntos) | **No recibido** | Los IDs RF/RF-A/RNF/RW/RN originales no se reproducen; se crea numeración consolidada con equivalencias solo donde el prompt las nombra. |
-| PDF Figma (83 pantallas) | **No recibido** | Los IDs de pantalla son provisionales (`P-xx`) hasta revisión. |
-| DER Canva | Solo las 10 entidades listadas | La tabla de diferencias (doc 07) se basa en esa lista. |
+| Informe 1 «PROYECTO FINANSMART» | Recibido; **pendiente de conciliar** | Se usó en las fases B y C solo lo ya citado (RNF2, `generarTransacciones()`, diagrama de clases). Falta una pasada completa de equivalencias de IDs (PA-14). |
+| Documento web v1.0 (20 tablas, 18 puntos) | Recibido; **pendiente de conciliar** | Los IDs originales no se reproducen; la numeración consolidada no tiene todavía tabla de equivalencias completa (PA-14). Los 18 puntos por definir siguen abiertos (PA-06). |
+| PDF Figma (83 pantallas) | **Analizado** (fases B y C) | Los IDs `PW-` se enlazan con páginas del PDF en el doc 11; paleta oficial en `frontend/css/tokens.css`. |
+| DER Canva | Imagen leída (10 entidades con atributos y relaciones) | Tabla de diferencias en el doc 07 §5. Algunas etiquetas pequeñas pueden tener errores de lectura. |
 
-**Acción requerida del cliente:** adjuntar los insumos 1–4 para conciliar IDs y cerrar los 18 puntos por definir.
+**Pendiente:** una pasada de conciliación de IDs originales ↔ consolidados (PA-14) y cerrar los 18 puntos por definir (PA-06).
 
 ## 3. Decisiones confirmadas (definitivas)
 | ID | Decisión | Efecto |
@@ -49,6 +49,15 @@ FinanSmart pasa a desarrollarse **solo como sitio web responsive** (celular < 76
 | INC-14 | No se define si un abono a meta reduce el balance | Los abonos no son movimientos y no alteran el balance (S-07) | Evita doble conteo y mantiene el balance igual al de los movimientos | RF-23 | Resuelta con supuesto; confirmar en PA-08 |
 | INC-15 | RN-02 llama «excedido» a `G ≥ L`, que con `G = L` no es exceso | Mismo estado y color; textos distintos («Llegaste a tu límite» / «Superaste tu límite por $X») | Mensaje veraz sin cambiar la regla del cliente | RN-02, Figma | Resuelta |
 | INC-16 | La primera versión del DER tenía 4 dependencias transitivas (`canal`, `es_sistema`, estados deducibles) | Se eliminaron las columnas derivadas (doc 08 §4) | Cumplir 3FN | Doc 06 y 07 | Resuelta |
+| INC-17 | Figma 81: «+12.000 usuarios activos», «4.8/5» y «20 % menos errores» sin fuente | Se quitan (D-07) | Publicidad engañosa (Ley 1480 de 2011) | Figma, landing | Resuelta; **pendiente validación legal** |
+| INC-18 | Figma 2, 14, 16: tasa de ahorro 39 %, pero 1.240.500 / 3.200.000 = 38,77 % | Se muestra 38 % (truncado) | Política de números (doc 04) | Figma | Resuelta |
+| INC-19 | Figma 68: saldos por cuenta, «Total en cuentas», «Sincronizado hace 2 min», «Ya los clasificamos» e ícono de actualizar | Se quitan; solo «Última sincronización» y «Próxima disponible»; la categoría es sugerida | 2 sincronizaciones al día; sin saldos en el modelo | Figma, doc 11 | Resuelta |
+| INC-20 | El Figma incluye pantallas fuera del alcance (onboarding y diagnóstico, Face ID, gastos fijos, deudas, patrimonio, salud, fondo, libertad, simulador, logros, idioma) | Ocultas en la web | D-06 | Doc 11 §5 | Resuelta |
+| INC-21 | Figma 15: vista previa con datos de ejemplo | No se incluye | «Cuenta vacía» y RW-07 | Figma | Resuelta |
+| INC-22 | Figma 78: el plan Pro lista funciones ocultas | Con la web actual, el Pro ofrece banca y exportación sin límite | Coherencia con D-06 | PA-02 | **Propuesta; decide el cliente** |
+| INC-23 | Con el límite real del Figma (200.000), 28.000 son 14 puntos: 98 % → 84 %, no 91 % → 84 % | Ejemplo del doc 04 corregido con valores del Figma | Aritmética | INC-04, PA-07 | Resuelta |
+| INC-24 | Las pruebas de la BD mostraron que eliminar una cuenta fallaba por `ON DELETE RESTRICT` entre movimiento y categoría | `CASCADE` + disparador que bloquea el borrado directo con movimientos | RF-34 y RN-09 deben cumplirse a la vez | Doc 07 | Resuelta y probada |
+| INC-25 | MySQL no permite `REVOKE` de un privilegio de tabla concedido a nivel de base; la auditoría quedaba modificable por la app | Privilegios tabla por tabla | RNF-04 | `03_permisos.sql` | Resuelta y probada |
 
 ## 5. Decisiones de diseño propias (justificadas)
 **Contraseña (D-04).** Mínimo 8, máximo 64; al menos una letra y un número; sin espacios en los extremos; no igual al correo, nombre o teléfono; no estar en lista de contraseñas comunes; se permite cualquier carácter Unicode. Se almacena con hash adaptativo (bcrypt/Argon2). *Supuesto:* no se exige símbolo ni rotación periódica (prácticas actuales y compatibles con el mínimo de 8).
@@ -96,7 +105,7 @@ Salud financiera, patrimonio neto, fondo de emergencia, libertad financiera, sim
 | PA-03 | Abierto | Método de verificación de identidad en pérdida del teléfono |
 | PA-04 | Abierto | Validación legal Ley 1480 y tratamiento de datos (Ley 1581 de 2012) |
 | PA-05 | Abierto | Proveedor de SMS, costo y SLA |
-| PA-06 | Abierto | Los 18 puntos por definir del documento web (insumo no recibido) |
+| PA-06 | Abierto | Los 18 puntos por definir del documento web |
 | PA-07 | Abierto | Valor real del límite de Alimentación del ejemplo INC-04 |
 | S-06 | Supuesto | Los meses restantes de una meta cuentan el mes en curso (doc 04, F7) |
 | S-07 | Supuesto | Los abonos a metas no modifican el balance |
@@ -109,3 +118,8 @@ Salud financiera, patrimonio neto, fondo de emergencia, libertad financiera, sim
 | PA-08 | Abierto | Confirmar si los abonos a metas deben reflejarse en el balance |
 | PA-09 | Abierto | Horarios de sincronización y si los intentos fallidos consumen cupo |
 | PA-10 | Abierto | Retención de la auditoría y su pseudonimización al eliminar una cuenta |
+| PA-11 | Abierto | ¿Se incluyen «Logros» y «Compartir logro» (Figma 46 y 80)? |
+| PA-12 | Abierto | ¿Se incluyen el comparativo mes a mes y el calendario (Figma 24 y 25) como parte de reportes? |
+| PA-13 | Abierto | ¿Se incluyen «Ayuda y soporte» (Figma 77) y «Dispositivos activos» (Figma 74) como RF-37 y RF-36? |
+| PA-14 | Abierto | Pasada de conciliación de IDs originales (informe 1 y documento web) con los consolidados |
+| S-14 | Supuesto | Las lecciones se pueden estudiar en cualquier orden; el «se desbloquea al completar el nivel» del Figma 43 queda fuera hasta decidirlo |

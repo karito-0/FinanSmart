@@ -1,0 +1,89 @@
+/* Génesis del proyecto · responsive desde 360 px (RNF-06). Colores con un solo rol (RW-06). */
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-padding-top: 4.5rem; }
+body { margin: 0; font: 16px/1.6 var(--fuente); color: var(--azul-oscuro); background: var(--crema-neutro); }
+.saltar { position: absolute; left: -999px; top: 0; background: var(--azul-oscuro); color: #fff; padding: .5rem 1rem; z-index: 20; }
+.saltar:focus { left: .5rem; top: .5rem; }
+:focus-visible { outline: 3px solid var(--azul-confianza); outline-offset: 2px; }
+.suave { color: var(--texto-suave); }
+
+.barra { position: sticky; top: 0; z-index: 10; display: flex; align-items: center; gap: .75rem; padding: .6rem 1rem; background: var(--azul-confianza); color: #fff; flex-wrap: wrap; }
+.marca { display: flex; align-items: center; gap: .5rem; min-width: 0; flex: 1; }
+.logo { display: inline-grid; place-items: center; width: 2rem; height: 2rem; border-radius: 8px; background: #fff; color: var(--azul-confianza); font-weight: 700; font-size: .85rem; }
+.insignia { font-size: .8rem; padding: .2rem .6rem; border: 1px solid rgba(255,255,255,.7); border-radius: 999px; white-space: nowrap; }
+#menu-boton { font: inherit; padding: .4rem .8rem; border-radius: var(--radio); border: 1px solid rgba(255,255,255,.7); background: transparent; color: #fff; cursor: pointer; }
+
+.marco { display: block; max-width: 1400px; margin: 0 auto; }
+.panel { display: none; background: var(--blanco); border-bottom: 1px solid var(--borde); padding: .5rem 1rem 1rem; }
+.panel.abierto { display: block; }
+nav ul { list-style: none; margin: 0; padding: 0; }
+nav a { display: block; padding: .45rem .75rem; border-radius: var(--radio); color: var(--azul-oscuro); text-decoration: none; }
+nav a:hover { background: var(--crema-neutro); }
+nav a[aria-current="page"] { background: var(--azul-confianza); color: #fff; }
+.pie { font-size: .8rem; margin: .75rem .75rem 0; }
+
+main { padding: 1rem; min-width: 0; outline: none; }
+article, .calculadora { background: var(--blanco); border: 1px solid var(--borde); border-radius: var(--radio); box-shadow: var(--sombra); padding: 1rem; margin-bottom: 1rem; overflow-wrap: anywhere; }
+h1, h2, h3 { line-height: 1.25; color: var(--azul-oscuro); }
+h1 { font-size: 1.6rem; margin-top: 0; } h2 { font-size: 1.3rem; margin-top: 2rem; border-bottom: 2px solid var(--crema-neutro); padding-bottom: .25rem; } h3 { font-size: 1.1rem; }
+code { font-family: var(--fuente-mono); font-size: .9em; background: var(--crema-neutro); padding: .1em .35em; border-radius: 4px; }
+pre { background: var(--azul-oscuro); color: #fff; padding: 1rem; border-radius: var(--radio); overflow-x: auto; max-width: 100%; }
+pre code { background: none; color: inherit; padding: 0; }
+pre.mermaid { background: var(--crema-neutro); color: var(--azul-oscuro); text-align: center; border: 1px solid var(--borde); }
+pre.diagrama-error { background: var(--crema-neutro); color: var(--azul-oscuro); border: 2px solid var(--rojo-limite); white-space: pre-wrap; }
+.tabla-scroll { overflow-x: auto; max-width: 100%; margin: 1rem 0; border: 1px solid var(--borde); border-radius: var(--radio); }
+table { border-collapse: collapse; width: 100%; font-size: .92rem; }
+th, td { border-bottom: 1px solid var(--borde); padding: .45rem .6rem; text-align: left; vertical-align: top; }
+th { background: var(--crema-neutro); position: sticky; top: 0; }
+blockquote { margin: 1rem 0; padding: .25rem 1rem; border-left: 4px solid var(--azul-confianza); background: var(--crema-neutro); }
+.enlace-interno { color: var(--texto-suave); }
+
+.estado { padding: 1rem; background: var(--blanco); border: 1px solid var(--borde); border-radius: var(--radio); }
+/* El color nunca es el único indicador: el texto también lo dice (RNF-08) */
+.estado.error, .error { border-left: 6px solid var(--rojo-limite); }
+main button, .traza button { font: inherit; cursor: pointer; }
+main > button { margin-top: .5rem; padding: .5rem 1rem; border-radius: var(--radio); border: 1px solid var(--azul-confianza); background: var(--azul-confianza); color: #fff; }
+
+.toc { padding: 0 1rem 1rem; }
+.toc h2 { font-size: .95rem; border: 0; margin: 0 0 .5rem; }
+.toc ul { list-style: none; padding: 0; margin: 0; font-size: .9rem; }
+.toc a { display: block; padding: .2rem 0; color: var(--azul-confianza); }
+
+/* Calculadora */
+.calc-rejilla { display: grid; gap: 1rem; grid-template-columns: 1fr; }
+fieldset { border: 1px solid var(--borde); border-radius: var(--radio); padding: .75rem 1rem 1rem; min-width: 0; }
+legend { font-weight: 700; padding: 0 .4rem; }
+label { display: block; font-size: .9rem; margin-top: .6rem; }
+input { display: block; width: 100%; margin-top: .2rem; padding: .5rem .6rem; font: inherit; border: 1px solid var(--azul-confianza); border-radius: 8px; background: #fff; color: var(--azul-oscuro); }
+output { display: block; margin-top: 1rem; padding: .6rem .75rem; border-radius: 8px; background: var(--crema-neutro); border-left: 6px solid var(--borde); }
+output.normal { border-left-color: var(--azul-confianza); }
+output.aviso { border-left-color: var(--naranja-alerta); }     /* solo aviso del 80 % */
+output.excedido { border-left-color: var(--rojo-limite); }     /* solo límite excedido */
+output.logro { border-left-color: var(--verde-logro); }        /* solo logro y ahorro */
+output.error { border-left-color: var(--rojo-limite); }
+
+/* Trazabilidad */
+.traza-cuerpo { display: grid; gap: 1rem; grid-template-columns: 1fr; margin-top: .75rem; }
+.traza-lista { list-style: none; margin: 0; padding: 0; max-height: 22rem; overflow: auto; border: 1px solid var(--borde); border-radius: var(--radio); }
+.traza-lista button { display: block; width: 100%; text-align: left; padding: .5rem .75rem; border: 0; border-bottom: 1px solid var(--borde); background: #fff; color: var(--azul-oscuro); }
+.traza-lista button[aria-current="true"] { background: var(--azul-confianza); color: #fff; }
+.traza-detalle { border: 1px solid var(--borde); border-radius: var(--radio); padding: .75rem 1rem; }
+.traza-fila { display: flex; flex-wrap: wrap; align-items: center; gap: .4rem; margin: .5rem 0; }
+.traza-fila strong { min-width: 6.5rem; }
+.chip { padding: .15rem .6rem; border-radius: 999px; border: 1px solid var(--azul-confianza); background: var(--crema-neutro); color: var(--azul-oscuro); }
+.enlace { border: 0; background: none; color: var(--azul-confianza); text-decoration: underline; padding: 0 .25rem; }
+
+/* Tableta */
+@media (min-width: 768px) {
+  .calc-rejilla { grid-template-columns: repeat(2, 1fr); }
+  .traza-cuerpo { grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); }
+}
+/* Escritorio: índice lateral fijo (RW-01) */
+@media (min-width: 1024px) {
+  #menu-boton { display: none; }
+  .marco { display: grid; grid-template-columns: 17rem minmax(0, 1fr) 14rem; align-items: start; }
+  .panel { display: block; position: sticky; top: 3.7rem; max-height: calc(100vh - 4rem); overflow: auto; border: 0; background: transparent; padding: 1rem; }
+  .toc { position: sticky; top: 3.7rem; max-height: calc(100vh - 4rem); overflow: auto; padding: 1rem 1rem 1rem 0; }
+  .calc-rejilla { grid-template-columns: repeat(3, 1fr); }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }

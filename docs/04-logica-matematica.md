@@ -1,7 +1,7 @@
 # 04 · Lógica matemática
 
 Cubre: RF-19, RF-20, RF-22, RF-23, RF-24, RF-25, RF-27, RF-29, RN-01 a RN-03, RN-06, RN-07, RN-08, RN-11 a RN-14, RN-16, RN-17, RNF-05, RNF-10.
-Los ejemplos se comprueban con `docs/anexos/verificar_calculos.py` (35 casos, todos correctos).
+Los ejemplos se comprueban con `docs/anexos/verificar_calculos.py` (37 casos, todos correctos).
 
 ## 1. Política única de números (resuelve INC-07)
 
@@ -87,19 +87,24 @@ PDF: `n ≤ 5.000` movimientos; Excel: `n ≤ 100.000`. Sobre el tope: se rechaz
 - Movimiento manual: mismo monto, misma fecha local y misma categoría que uno existente → aviso y confirmación.
 - Movimiento propuesto del banco: mismo monto y tipo que un movimiento aprobado con diferencia de fecha ≤ 1 día → marca «posible duplicado» **calculada al mostrar** (no se guarda). Supuesto S-11.
 
+### F13 · Disponible de una categoría
+`D = L − G`. Si `D ≥ 0`: «Te quedan $D». Si `D < 0`: «Superaste tu límite por $|D|». Con `L = 0` no se muestra porcentaje, solo el gastado.
+
 ## 4. Ejemplos verificados
 
-**Presupuesto de Alimentación (corrige INC-04).** Límite `L = 400.000`.
+**Presupuesto de Alimentación (corrige INC-04).** Valores del Figma (pantallas 20 a 22): límite `L = 200.000`, gastado `168.000`.
 | Situación | Cálculo | Resultado |
 |---|---|---|
-| Gastado 364.000 | `100·364.000 / 400.000` | 91 % · AVISO |
-| Se elimina un movimiento de 28.000 | `G = 336.000` → `100·336.000 / 400.000` | **84 %** · AVISO |
+| Gastado 196.000 | `100·196.000 / 200.000` | 98 % · AVISO |
+| Se elimina un movimiento de 28.000 | `G = 168.000` → `100·168.000 / 200.000` | **84 %** · AVISO |
+| Cuánto queda (F13) | `D = 200.000 − 168.000` | «Te quedan $32.000» (coincide con el Figma) |
 | Gastado 79.999 de 100.000 | 79,999 % | 79 % · NORMAL (no 80 %) |
 | Gastado 80.000 de 100.000 | 80 % exacto | 80 % · AVISO, se dispara la alerta |
 | Gastado 100.000 de 100.000 | 100 % exacto | EXCEDIDO · «Llegaste a tu límite» |
-| Gastado 500.000 de 400.000 | 125 % | EXCEDIDO · «Superaste tu límite por $100.000» |
+| Gastado 118.000 de 100.000 | 118 % (caso «Ocio» del Figma) | EXCEDIDO · «Superaste tu límite por $18.000» |
 
 **Mes de ejemplo.** Ingresos 3.200.000 y gastos 2.560.000: balance 640.000; tasa `= 20 %`; cumple la meta del 20 % justo. Con gastos 2.560.001 ya no cumple.
+**Inicio del Figma (INC-18):** ingresos 3.200.000, gastos 1.959.500, balance 1.240.500; la tasa real es 38,77 %, que con la política de truncado se muestra **38 %** (el diseño dice 39 %, redondeado).
 
 **Meta.** Objetivo 3.000.000, ahorrado 450.000, fecha 31-mar-2027, hoy 17-nov-2026: `M = 5` y `A = ceil(2.550.000 / 5) = 510.000`; progreso 15 %.
 **Con redondeo:** objetivo 1.000.000, ahorrado 0, fecha 31-ene-2027: `M = 3`, `A = ceil(333.333,33) = 333.334`.
